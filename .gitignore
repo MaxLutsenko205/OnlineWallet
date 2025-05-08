@@ -1,0 +1,71 @@
+# === Общие ОС/IDE ===
+.DS_Store
+Thumbs.db
+*.log
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse / STS
+.classpath
+.project
+.settings/
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+
+# VS Code
+.vscode/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# === Java / Spring (Maven + Gradle) ===
+/target/
+build/
+.mvn/
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+*.class
+*.jar
+*.war
+*.ear
+
+# === Node.js / React ===
+node_modules/
+build/
+.react-router/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# === MacOS metadata ===
+.DS_Store
+
+# === Лог файлы ===
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === Бэкап-файлы / временные ===
+*.swp
+*.tmp
+*.bak
+*.orig
+
+# === Папки кэша ===
+.cache/
+.parcel-cache/
+coverage/
