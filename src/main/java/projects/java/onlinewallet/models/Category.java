@@ -35,8 +35,8 @@ public class Category {
     private List<Trade> trades;
 
     @JsonIgnore
+    @ManyToOne()
     @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "Пользователь - обязательное поле")
     private UserEntity user;
 }

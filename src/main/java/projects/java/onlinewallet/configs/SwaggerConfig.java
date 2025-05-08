@@ -36,7 +36,7 @@ public class SwaggerConfig {
                         .title("Online Wallet API")
                         .version(appVersion)
                         .description(appDescription)
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
+                        .license(new License().name("Apache 2.0").url("https://springdoc.org"))
                         .contact(new Contact()
                                 .name("Maxim")
                                 .email("lytsenko.maksim@gmail.com")))

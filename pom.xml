@@ -86,6 +86,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- AWS -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.25.20</version>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

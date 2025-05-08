@@ -47,7 +47,7 @@ public class TradeController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<Trade> getTrade(@PathVariable Long id,
-                                             @AuthenticationPrincipal UserDetails userDetails) {
+                                          @AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
         log.info("Получение категории id={} для пользователя {}", id, email);
         Trade trade = tradeService.getTradeById(id, email);

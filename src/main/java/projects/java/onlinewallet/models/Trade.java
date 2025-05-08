@@ -37,13 +37,13 @@ public class Trade {
     private TradeType type;
 
     @JoinColumn(name = "category_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @NotNull(message = "Категория - обязательное поле")
     private Category category;
 
     @JsonIgnore
+    @ManyToOne()
     @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "Пользователь - обязательное поле")
     private UserEntity user;
 

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import projects.java.onlinewallet.dto.CategoryDTO;
 import projects.java.onlinewallet.models.Category;
 import projects.java.onlinewallet.models.UserEntity;
@@ -20,15 +21,17 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final CategoryMapper categoryMapper;
+    private final ImageService imageService;
 
-    public Category createCategory(CategoryDTO dto, String email) {
+    public Category createCategory(CategoryDTO dto, MultipartFile image, String email) {
         UserEntity user = getUserByEmail(email);
         Category newCategory = categoryMapper.dtoToEntity(dto);
         newCategory.setUser(user);
+        newCategory.setIcon(imageService.upload(image));
         return categoryRepository.save(newCategory);
     }
 
-    public Category getCategoryBuId(Long id, String email) {
+    public Category getCategoryById(Long id, String email) {
         return getCategoryForUser(id, email);
     }
 
@@ -38,13 +41,13 @@ public class CategoryService {
         return categoryRepository.findAllByUser(user, pageable);
     }
 
-    public Category updateCategory(Long id, CategoryDTO dto, String email) {
+    public Category updateCategory(Long id, CategoryDTO dto, MultipartFile image, String email) {
         Category category = getCategoryForUser(id, email);
 
         category.setName(dto.getName());
         category.setTextHex(dto.getTextHex());
         category.setBgHex(dto.getBgHex());
-        category.setIcon(dto.getIcon());
+        category.setIcon(imageService.upload(image));
 
         return categoryRepository.save(category);
     }
