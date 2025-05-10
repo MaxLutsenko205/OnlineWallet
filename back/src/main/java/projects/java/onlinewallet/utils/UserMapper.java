@@ -11,7 +11,6 @@ public class UserMapper {
 
     public UserDTO entityToDto(UserEntity user) {
         return UserDTO.builder()
-                .id(user.getId())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .budget(user.getBudget())
@@ -20,7 +19,6 @@ public class UserMapper {
 
     public UserEntity dtoToEntity(UserDTO dto) {
         return UserEntity.builder()
-                .id(dto.getId())
                 .email(dto.getEmail())
                 .password(dto.getPassword())
                 .budget(dto.getBudget())

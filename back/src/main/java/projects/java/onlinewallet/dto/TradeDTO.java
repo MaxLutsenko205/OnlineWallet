@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TradeDTO {
-//    private Long id;
 
     @NotNull(message = "Сумма - обязательное поле")
     @Min(value = 0, message = "Сумма не может быть отрицательной")
@@ -35,6 +34,4 @@ public class TradeDTO {
 
     @NotNull(message = "Категория - обязательное поле")
     private Long categoryId;
-
-//    private Long userId;
 }

@@ -30,13 +30,12 @@ public class Category {
 
     private String icon;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "category")
     private List<Trade> trades;
 
     @JsonIgnore
+    @ManyToOne()
     @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "Пользователь - обязательное поле")
     private UserEntity user;
 }

@@ -1,11 +1,9 @@
 package projects.java.onlinewallet.utils;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import projects.java.onlinewallet.dto.CategoryDTO;
 import projects.java.onlinewallet.models.Category;
-import projects.java.onlinewallet.models.UserEntity;
 import projects.java.onlinewallet.repositories.UserRepository;
 
 import java.util.List;
@@ -21,26 +19,15 @@ public class CategoryMapper {
                 .name(category.getName())
                 .textHex(category.getTextHex())
                 .bgHex(category.getBgHex())
-                .icon(category.getIcon())
                 .build();
     }
 
     public Category dtoToEntity(CategoryDTO dto) {
 
-//        UserEntity user = userRepository.findById(dto.getUserId())
-//                .orElseThrow(() -> new EntityNotFoundException(String.format("Пользователь с id: %d не найден", dto.getUserId())));
-
-//        try {
-//            user = userRepository.getReferenceById(dto.getUserId());
-//        } catch (EntityNotFoundException e){
-//            e.getStackTrace();
-//        }
-
         return Category.builder()
                 .name(dto.getName())
                 .textHex(dto.getTextHex())
                 .bgHex(dto.getBgHex())
-                .icon(dto.getIcon())
                 .build();
     }
 

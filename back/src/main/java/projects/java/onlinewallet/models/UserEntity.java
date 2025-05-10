@@ -34,7 +34,6 @@ public class UserEntity implements UserDetails {
     @Size(min = 6, message = "Пароль должен содержать минимум 6 символов")
     private String password;
 
-    @PositiveOrZero(message = "Бюджет не может быть отрицательным")
     private Integer budget;
 
     @JsonIgnore
@@ -74,5 +73,12 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+    @PrePersist
+    protected void onCreate(){
+        this.budget = 0;
+    }
 }
+
+
 

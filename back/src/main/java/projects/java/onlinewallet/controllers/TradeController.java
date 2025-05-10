@@ -47,7 +47,7 @@ public class TradeController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<Trade> getTrade(@PathVariable Long id,
-                                             @AuthenticationPrincipal UserDetails userDetails) {
+                                          @AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
         log.info("Получение категории id={} для пользователя {}", id, email);
         Trade trade = tradeService.getTradeById(id, email);
@@ -68,7 +68,7 @@ public class TradeController {
         return ResponseEntity.ok(trades);
     }
 
-    @Operation(summary = "Обновить транзакцию по ID")
+    @Operation(summary = "Обновить транзакцию по ID (обновляются только комментарий и категория)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Транзакция обновлена"),
             @ApiResponse(responseCode = "404", description = "Транзакция не найдена")

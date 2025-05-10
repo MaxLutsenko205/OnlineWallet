@@ -1,7 +1,9 @@
 projects\java\onlinewallet\security\JwtTokenFilter.class
+projects\java\onlinewallet\services\CategoryService$1.class
 projects\java\onlinewallet\dto\AuthResponse.class
 projects\java\onlinewallet\dto\CategoryDTO$CategoryDTOBuilder.class
 projects\java\onlinewallet\dto\CategoryDTO.class
+projects\java\onlinewallet\services\ImageService.class
 projects\java\onlinewallet\utils\CategoryMapper.class
 projects\java\onlinewallet\models\TradeType.class
 projects\java\onlinewallet\models\Category.class
@@ -26,6 +28,7 @@ projects\java\onlinewallet\repositories\TradeRepository.class
 projects\java\onlinewallet\repositories\CategoryRepository.class
 projects\java\onlinewallet\models\Trade.class
 projects\java\onlinewallet\OnlineWalletApplication.class
+projects\java\onlinewallet\services\TradeService$1.class
 projects\java\onlinewallet\services\UserService.class
 projects\java\onlinewallet\dto\AuthRequest.class
 projects\java\onlinewallet\dto\UserDTO$UserDTOBuilder.class
