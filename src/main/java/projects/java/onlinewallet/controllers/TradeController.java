@@ -68,7 +68,7 @@ public class TradeController {
         return ResponseEntity.ok(trades);
     }
 
-    @Operation(summary = "Обновить транзакцию по ID")
+    @Operation(summary = "Обновить транзакцию по ID (обновляются только комментарий и категория)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Транзакция обновлена"),
             @ApiResponse(responseCode = "404", description = "Транзакция не найдена")

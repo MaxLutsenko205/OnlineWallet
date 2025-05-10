@@ -1,5 +1,6 @@
 package projects.java.onlinewallet.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import projects.java.onlinewallet.dto.TradeDTO;
 import projects.java.onlinewallet.models.Category;
 import projects.java.onlinewallet.models.Trade;
+import projects.java.onlinewallet.models.TradeType;
 import projects.java.onlinewallet.models.UserEntity;
 import projects.java.onlinewallet.repositories.CategoryRepository;
 import projects.java.onlinewallet.repositories.TradeRepository;
@@ -25,11 +27,33 @@ public class TradeService {
     private final CategoryRepository categoryRepository;
     private final TradeMapper tradeMapper;
 
+    @Transactional
     public Trade createTrade(TradeDTO dto, String email) {
+        // получение пользователя
         UserEntity user = getUserByEmail(email);
+
+        // обновление бюджета
+        Integer sum = dto.getSum();
+        switch (dto.getType()){
+            case TradeType.INCOME -> {
+                user.setBudget(user.getBudget()+sum);
+            }
+            case TradeType.EXPENSE -> {
+                user.setBudget(user.getBudget()-sum);
+            }
+            default -> {
+                throw new IllegalArgumentException("Неверный тип транзакции: " + dto.getType());
+            }
+        }
+
+        // сохранение транзакции и обновление пользователя
         Trade newTrade = tradeMapper.dtoToEntity(dto);
         newTrade.setUser(user);
-        return tradeRepository.save(newTrade);
+        Trade savedTrade = tradeRepository.save(newTrade);
+
+        userRepository.save(user);
+
+        return savedTrade;
     }
 
     public Page<Trade> getAllTradesByUser(String email, int page, int size) {
@@ -42,20 +66,43 @@ public class TradeService {
         return getTradeForUser(id, email);
     }
 
+
     public Trade updateTrade(Long id, TradeDTO dto, String email) {
         Trade trade = getTradeForUser(id, email);
         Category category = getCategoryById(dto.getCategoryId());
 
-        trade.setSum(dto.getSum());
+        // обновляется только комментарий и категория транзакции
+//        trade.setSum(dto.getSum());
         trade.setComment(dto.getComment());
-        trade.setType(dto.getType());
+//        trade.setType(dto.getType());
         trade.setCategory(category);
 
         return tradeRepository.save(trade);
     }
 
+    @Transactional
     public void deleteTrade(Long id, String email) {
+        // получение транзакции с бд
         Trade trade = getTradeForUser(id, email);
+
+        // получение пользователя
+        UserEntity user = getUserByEmail(email);
+
+        // обновление бюджета пользователя
+        Integer sum = trade.getSum();
+        switch (trade.getType()){
+            case TradeType.INCOME -> {
+                user.setBudget(user.getBudget()-sum);
+            }
+            case TradeType.EXPENSE -> {
+                user.setBudget(user.getBudget()+sum);
+            }
+            default -> {
+                throw new IllegalArgumentException("Неверный тип транзакции: " + trade.getType());
+            }
+        }
+
+        // удаление транзакции
         tradeRepository.delete(trade);
     }
 

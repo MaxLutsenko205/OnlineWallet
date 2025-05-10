@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -32,12 +33,7 @@ public class ImageService {
         String filename = UUID.randomUUID() + "_" + image.getOriginalFilename();
 
         // try to reg S3Client then putObject and return path
-        try (S3Client s3Client = S3Client.builder()
-                .region(Region.of(region))
-                .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(accessKey, secretKey)
-                ))
-                .build()){
+        try (S3Client s3Client = buildS3Client()){
 
             s3Client.putObject(PutObjectRequest.builder()
                             .bucket(bucketName)
@@ -51,6 +47,27 @@ public class ImageService {
         } catch (IOException e){
             throw new RuntimeException("Ошибка при загрузке изображения", e);
         }
+    }
+
+    public void delete(String imageUrl) {
+        String filename = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+        try (S3Client s3Client = buildS3Client()) {
+            s3Client.deleteObject(DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(filename)
+                    .build());
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при удалении изображения", e);
+        }
+    }
+
+    private S3Client buildS3Client() {
+        return S3Client.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKey, secretKey)
+                ))
+                .build();
     }
 
 }

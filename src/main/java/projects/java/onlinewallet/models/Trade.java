@@ -30,18 +30,19 @@ public class Trade {
     @Size(max = 255, message = "Комментарий не должен превышать 255 символов")
     private String comment;
 
+    @Column(updatable = false)
     private LocalDateTime creationDate;
 
     @Enumerated(value = EnumType.STRING)
     @NotNull(message = "Тип - обязательное поле")
     private TradeType type;
 
+    @JsonIgnore
     @JoinColumn(name = "category_id")
     @ManyToOne()
     @NotNull(message = "Категория - обязательное поле")
     private Category category;
 
-    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "user_id")
     @NotNull(message = "Пользователь - обязательное поле")

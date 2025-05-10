@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
-    private Long id;
 
     @Email(message = "Некорректный email")
     @NotNull(message = "Email не должен быть пустым")
@@ -24,6 +23,5 @@ public class UserDTO {
     @Size(min = 6, message = "Пароль должен содержать минимум 6 символов")
     private String password;
 
-    @PositiveOrZero(message = "Бюджет не может быть отрицательным")
     private Integer budget;
 }

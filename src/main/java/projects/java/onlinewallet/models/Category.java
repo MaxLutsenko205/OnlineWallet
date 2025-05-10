@@ -30,8 +30,7 @@ public class Category {
 
     private String icon;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "category")
     private List<Trade> trades;
 
     @JsonIgnore
