@@ -1,5 +1,5 @@
-import { Index } from "~/pages/indexPage";
+import { IndexPage } from "~/pages/indexPage";
 
 export default function IndexRoute() {
-  return <Index ></Index>;
+  return <IndexPage ></IndexPage>;
 }
