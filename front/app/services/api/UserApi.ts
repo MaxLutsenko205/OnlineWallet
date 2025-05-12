@@ -1,6 +1,6 @@
 import { api, type ApiResponse } from "./Api";
 
-const ROUTE = "/auth";
+const ROUTE = "auth";
 
 interface AuthDto {
   email: string;
@@ -10,10 +10,12 @@ interface AuthDto {
 export async function login(
   body: AuthDto
 ): Promise<ApiResponse<{ token: string }>> {
+   console.log("Login function called with body:", body);
   const response = await api.create<AuthDto, { token: string }>(
     ROUTE + "/login",
     body
   );
+  console.log("Login response:", response);
   return response;
 }
 

@@ -16,6 +16,7 @@ import projects.java.onlinewallet.repositories.CategoryRepository;
 import projects.java.onlinewallet.repositories.TradeRepository;
 import projects.java.onlinewallet.repositories.UserRepository;
 import projects.java.onlinewallet.utils.TradeMapper;
+import java.util.List;
 
 
 @Service
@@ -56,11 +57,10 @@ public class TradeService {
         return savedTrade;
     }
 
-    public Page<Trade> getAllTradesByUser(String email, int page, int size) {
-        UserEntity user = getUserByEmail(email);
-        Pageable pageable = PageRequest.of(page, size);
-        return tradeRepository.findAllByUser(user, pageable);
-    }
+public List<Trade> getAllTradesByUser(String email) {
+    UserEntity user = getUserByEmail(email);
+    return tradeRepository.findAllByUser(user);
+}
 
     public Trade getTradeById(Long id, String email) {
         return getTradeForUser(id, email);

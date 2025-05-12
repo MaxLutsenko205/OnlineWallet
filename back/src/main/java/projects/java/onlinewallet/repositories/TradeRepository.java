@@ -7,8 +7,9 @@ import projects.java.onlinewallet.models.Trade;
 import projects.java.onlinewallet.models.UserEntity;
 
 import java.util.Optional;
+import java.util.List;
 
 public interface TradeRepository extends JpaRepository<Trade, Long> {
-    Page<Trade> findAllByUser(UserEntity user, Pageable pageable);
+    List<Trade> findAllByUser(UserEntity user);
     Optional<Trade> findByIdAndUser(Long id, UserEntity user);
 }

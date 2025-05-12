@@ -1,4 +1,4 @@
 export enum TradeType {
-  INCOME,
-  EXPENSE,
+  INCOME = "INCOME",
+  EXPENSE = "EXPENSE",
 }

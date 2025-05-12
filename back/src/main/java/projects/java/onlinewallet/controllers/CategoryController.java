@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import projects.java.onlinewallet.dto.CategoryDTO;
 import projects.java.onlinewallet.models.Category;
 import projects.java.onlinewallet.services.CategoryService;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -39,9 +40,8 @@ public class CategoryController {
             @ApiResponse(responseCode = "201", description = "Категория создана"),
             @ApiResponse(responseCode = "400", description = "Некорректный запрос")
     })
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Category> createCategory(@RequestPart("icon") MultipartFile image,
-                                                   @Parameter(
+    @PostMapping()
+    public ResponseEntity<Category> createCategory(@Parameter(
                                                            required = true,
                                                            schema = @Schema(implementation = CategoryDTO.class)
                                                    )
@@ -54,7 +54,7 @@ public class CategoryController {
         ObjectMapper mapper = new ObjectMapper();
         CategoryDTO dto = mapper.readValue(dtoString, CategoryDTO.class);
 
-        Category created = categoryService.createCategory(dto, image, email);
+        Category created = categoryService.createCategory(dto, email);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -72,44 +72,34 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
-    @Operation(summary = "Получить все категории текущего пользователя (с пагинацией)")
+   @Operation(summary = "Получить все категории текущего пользователя")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Категории получены")
     })
     @GetMapping
-    public ResponseEntity<Page<Category>> getAllCategories(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "10") int size,
-                                                           @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<Category>> getAllCategories(@AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
-        log.info("Получение всех категорий пользователя {} (page={}, size={})", email, page, size);
-        Page<Category> categories = categoryService.getAllCategoriesByUserEmail(email, page, size);
+        log.info("Получение всех категорий пользователя {}", email);
+        List<Category> categories = categoryService.getAllCategoriesByUserEmail(email);
         return ResponseEntity.ok(categories);
     }
 
     @Operation(summary = "Обновить категорию по ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Категория обновлена"),
-            @ApiResponse(responseCode = "404", description = "Категория не найдена")
-    })
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id,
-                                                   @RequestPart("icon") MultipartFile image,
-                                                   @Parameter(
-                                                           required = true,
-                                                           schema = @Schema(implementation = CategoryDTO.class)
-                                                   )
-                                                   @RequestPart("category") @Valid String dtoString,
-                                                   @AuthenticationPrincipal UserDetails userDetails) throws JsonProcessingException {
-        String email = userDetails.getUsername();
-        log.info("Обновление категории id={} пользователем {}", id, email);
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Категория обновлена"),
+        @ApiResponse(responseCode = "404", description = "Категория не найдена")
+})
+@PutMapping(value = "/{id}")
+public ResponseEntity<Category> updateCategory(@PathVariable Long id,
+                                               @RequestBody @Valid CategoryDTO dto,
+                                               @AuthenticationPrincipal UserDetails userDetails) {
+    String email = userDetails.getUsername();
+    log.info("Обновление категории id={} пользователем {}", id, email);
 
-        // преобразование строки в объект класса dto
-        ObjectMapper mapper = new ObjectMapper();
-        CategoryDTO dto = mapper.readValue(dtoString, CategoryDTO.class);
+    Category updated = categoryService.updateCategory(id, dto, email);
+    return ResponseEntity.ok(updated);
+}
 
-        Category updated = categoryService.updateCategory(id, dto, image, email);
-        return ResponseEntity.ok(updated);
-    }
 
     @Operation(summary = "Удалить пользовательскую категорию по ID")
     @ApiResponses(value = {
