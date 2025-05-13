@@ -30,7 +30,7 @@ public class TradeMapper {
     public Trade dtoToEntity(TradeDTO dto) {
 
         Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException(String.format("Категория с id: %d не найдена", dto.getCategoryId())));;
+                .orElseThrow(() -> new RuntimeException(String.format("Категория с id: %d не найдена", dto.getCategoryId())));
 
         return Trade.builder()
                 .sum(dto.getSum())

@@ -5,6 +5,5 @@ export interface Category {
   name: string;
   textHex: string;
   bgHex: string;
-  icon: string;
   trades?: Trade[];
 }

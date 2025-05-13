@@ -19,7 +19,7 @@ export async function createTrade(body: createTradeDto): Promise<Trade> {
   return response.data ?? ({} as Trade);
 }
 
-export async function update(
+export async function updateTrade(
   id: number,
   body: Partial<createTradeDto>
 ): Promise<Trade> {

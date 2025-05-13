@@ -6,66 +6,87 @@ export interface ApiResponse<T> {
 
 const BASE_URL = "/api";
 
-// Функция для получения заголовков авторизации
-function getAuthHeaders(): HeadersInit {
-  const token = localStorage.getItem("token");
-  return token
-    ? { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
-    : { "Content-Type": "application/json" };
-}
-
-// Улучшенная универсальная функция для fetch-запросов
+// Основная универсальная fetch-функция с поддержкой FormData и кастомных заголовков
 export async function apiFetch<T, TBody = unknown>(
   path: string,
   method: string = "GET",
-  body?: TBody
+  body?: TBody,
+  customHeaders?: HeadersInit
 ): Promise<ApiResponse<T>> {
   try {
     const url = `${BASE_URL}/${path}`;
+    const token = localStorage.getItem("token");
+
+    const isFormData = body instanceof FormData;
+
+    const defaultHeaders: HeadersInit = isFormData
+      ? token
+        ? { Authorization: `Bearer ${token}` }
+        : {}
+      : {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        };
+
+    const headers: HeadersInit = {
+      ...defaultHeaders,
+      ...customHeaders,
+    };
+
     const options: RequestInit = {
       method,
-      headers: getAuthHeaders(),
-      body: body ? JSON.stringify(body) : undefined,
+      headers,
+      body: body
+        ? isFormData
+          ? (body as BodyInit) // don't stringify FormData
+          : JSON.stringify(body)
+        : undefined,
     };
+
     console.log("url", url);
+    console.log("options", options);
+
     const response = await fetch(url, options);
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 403) {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      }
       throw new Error(data.message || "Ошибка запроса");
     }
 
     return { data };
   } catch (error) {
-    console.error(error);
-
-    // Типизация ошибки как строка или объект
-    return { error: error instanceof Error ? error.message : String(error) };
+    console.error("API Error:", error);
+    return {
+      error: error instanceof Error ? error.message : String(error),
+    };
   }
 }
 
+// Обёртка с методами для CRUD операций
 export const api = {
-  // Получение всех элементов
   getAll: <T>(route: string = "", params?: string) =>
     apiFetch<T[]>(params ? `${route}/${params}` : route),
-  
 
-  // Получение элемента по ID
   getById: <T>(route: string, id: number | string) =>
     apiFetch<T>(`${route}/${id}`),
 
-  // Создание элемента: TInput - данные запроса, TOutput - данные ответа
-  create: <TInput, TOutput = TInput>(route: string, data: TInput) =>
-    apiFetch<TOutput>(route, "POST", data),
+  create: <TInput, TOutput = TInput>(
+    route: string,
+    data: TInput,
+    headers?: HeadersInit
+  ) => apiFetch<TOutput>(route, "POST", data, headers),
 
-  // Обновление элемента: TInput - данные запроса, TOutput - данные ответа
   update: <TInput, TOutput = TInput>(
     route: string,
     id: number | string,
-    data: Partial<TInput>
-  ) => apiFetch<TOutput>(`${route}/${id}`, "PUT", data),
+    data: Partial<TInput>,
+    headers?: HeadersInit
+  ) => apiFetch<TOutput>(`${route}/${id}`, "PUT", data, headers),
 
-  // Удаление элемента: только ID
   remove: (route: string, id: number | string) =>
     apiFetch<null>(`${route}/${id}`, "DELETE"),
 };

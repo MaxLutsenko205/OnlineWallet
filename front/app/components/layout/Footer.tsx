@@ -1,10 +1,7 @@
-
-import { Link } from "react-router";
-
 export function Footer() {
   return (
-    <footer className="bg-white shadow-md rounded-lg p-4 flex justify-center space-x-6">
-    Что то здесь будет
+    <footer className="bg-gray-100 text-center text-sm text-gray-500 py-4 mt-8 rounded-t-2xl shadow-inner">
+      <p>OnlineWallet © {new Date().getFullYear()}</p>
     </footer>
   );
 }

@@ -1,6 +1,5 @@
 import type { Category } from "./Category";
 import type { TradeType } from "./TradeType";
-import type { User } from "./User";
 
 export interface Trade {
   id: number;
@@ -9,5 +8,4 @@ export interface Trade {
   creationDate: string;
   type: TradeType;
   category: Category;
-  user: User;
 }

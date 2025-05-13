@@ -1,30 +1,48 @@
 import { Link, useNavigate } from "react-router";
-import { logout } from "~/features/user/userSlice";
-import { useAppDispatch } from "~/hooks/reduxHooks";
+import { useUser } from "~/hooks/useUser";
 
 export function Navbar() {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { user, logoutUser } = useUser();
 
   const handleLogout = () => {
-    dispatch(logout());
+    logoutUser();
     navigate("/login");
   };
 
   return (
-    <nav className="bg-white shadow-md rounded-lg p-4 flex justify-center space-x-6">
-      <Link to="/dashboard" className="text-blue-500 hover:underline">
-        Dashboard
-      </Link>
-      <Link to="/stats" className="text-blue-500 hover:underline">
-        Stats
-      </Link>
-      <Link to="/settings" className="text-blue-500 hover:underline">
-        Settings
-      </Link>
-      <button onClick={handleLogout} className="text-blue-500 hover:underline">
-        Logout
-      </button>
+    <nav className="bg-white shadow-md p-4 sm:px-6 md:px-10 rounded-b-2xl">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex gap-6 text-base font-medium text-blue-600">
+          <Link
+            to="/dashboard"
+            className="hover:text-blue-800 transition-colors"
+          >
+            Dashboard
+          </Link>
+          <Link to="/stats" className="hover:text-blue-800 transition-colors">
+            Stats
+          </Link>
+          <Link
+            to="/settings"
+            className="hover:text-blue-800 transition-colors"
+          >
+            Settings
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="text-sm sm:text-base font-semibold text-gray-700">
+            Budget: <span className="text-green-600">${user.budget}</span>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="text-red-500 hover:text-red-700 font-medium text-sm sm:text-base"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
     </nav>
   );
 }

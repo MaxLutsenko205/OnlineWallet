@@ -30,11 +30,11 @@ public class CategoryService {
     private final ImageService imageService;
     private final TradeRepository tradeRepository;
 
-    public Category createCategory(CategoryDTO dto, MultipartFile image, String email) {
+    public Category createCategory(CategoryDTO dto, String email) {
         UserEntity user = getUserByEmail(email);
         Category newCategory = categoryMapper.dtoToEntity(dto);
         newCategory.setUser(user);
-        newCategory.setIcon(imageService.upload(image));
+        // newCategory.setIcon(imageService.upload(image));
         return categoryRepository.save(newCategory);
     }
 
@@ -42,21 +42,20 @@ public class CategoryService {
         return getCategoryForUser(id, email);
     }
 
-    public Page<Category> getAllCategoriesByUserEmail(String email, int page, int size) {
-        UserEntity user = getUserByEmail(email);
-        Pageable pageable = PageRequest.of(page, size);
-        return categoryRepository.findAllByUser(user, pageable);
+   public List<Category> getAllCategoriesByUserEmail(String email) {
+        UserEntity user = getUserByEmail(email); 
+        return categoryRepository.findAllByUser(user);  
     }
 
-    public Category updateCategory(Long id, CategoryDTO dto, MultipartFile image, String email) {
+    public Category updateCategory(Long id, CategoryDTO dto, String email) {
         Category category = getCategoryForUser(id, email);
 
         category.setName(dto.getName());
         category.setTextHex(dto.getTextHex());
         category.setBgHex(dto.getBgHex());
         // удаление старой картинки и загрузка новой
-        imageService.delete(category.getIcon());
-        category.setIcon(imageService.upload(image));
+        // imageService.delete(category.getIcon());
+        // category.setIcon(imageService.upload(image));
 
         return categoryRepository.save(category);
     }
@@ -88,7 +87,7 @@ public class CategoryService {
         userRepository.save(user);
 
         // удаление картинки соответствующей категории
-        imageService.delete(category.getIcon());
+        // imageService.delete(category.getIcon());
         // удаление категории
         categoryRepository.delete(category);
     }

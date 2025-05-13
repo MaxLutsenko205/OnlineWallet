@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import projects.java.onlinewallet.dto.TradeDTO;
 import projects.java.onlinewallet.models.Trade;
 import projects.java.onlinewallet.services.TradeService;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -54,19 +55,17 @@ public class TradeController {
         return ResponseEntity.ok(trade);
     }
 
-    @Operation(summary = "Получить все транзакции текущего пользователя (с пагинацией)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Транзакции получены")
-    })
-    @GetMapping
-    public ResponseEntity<Page<Trade>> getAllTrades(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "10") int size,
-                                                    @AuthenticationPrincipal UserDetails userDetails) {
-        String email = userDetails.getUsername();
-        log.info("Получение всех транзакций пользователя {} (page={}, size={})", email, page, size);
-        Page<Trade> trades = tradeService.getAllTradesByUser(email, page, size);
-        return ResponseEntity.ok(trades);
-    }
+@Operation(summary = "Получить все транзакции текущего пользователя")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Транзакции получены")
+})
+@GetMapping
+public ResponseEntity<List<Trade>> getAllTrades(@AuthenticationPrincipal UserDetails userDetails) {
+    String email = userDetails.getUsername();
+    log.info("Получение всех транзакций пользователя {}", email);
+    List<Trade> trades = tradeService.getAllTradesByUser(email);
+    return ResponseEntity.ok(trades);
+}
 
     @Operation(summary = "Обновить транзакцию по ID (обновляются только комментарий и категория)")
     @ApiResponses(value = {

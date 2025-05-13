@@ -1,4 +1,4 @@
-    import { useState } from "react";
+import { useState } from "react";
 import { useSubmit } from "react-router";
 
 export function LoginForm() {
@@ -17,6 +17,7 @@ export function LoginForm() {
     submit(new FormData(e.target as HTMLFormElement), {
       method: "post",
     });
+    
   };
 
   return (

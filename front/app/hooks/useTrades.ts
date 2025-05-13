@@ -1,19 +1,31 @@
-import type { Trade } from "~/types/Trade";
+import {
+  createTradeThunk,
+  deleteTradeThunk,
+  fetchTradesThunk,
+  updateTradeThunk,
+} from "~/features/trades/tradeThunks";
 import { useAppDispatch, useAppSelector } from "./reduxHooks";
-import { addTrade, removeTrade, setTrades } from "~/features/trades/tradeSlice";
+import type { createTradeDto } from "~/services/api/TradeApi";
 
 export const useTrade = () => {
   const dispatch = useAppDispatch();
-  const trades = useAppSelector((state) => state.trade.trades);
+  const { trades,filteredTrades, loading, error } = useAppSelector((state) => state.trade);
 
-  const addNewTrade = (trade: Trade) => dispatch(addTrade(trade));
-  const removeTradeById = (id: number) => dispatch(removeTrade(id));
-  const initializeTrades = (trades: Trade[]) => dispatch(setTrades(trades));
+  const fetchAllTrades = () => dispatch(fetchTradesThunk());
+  const createTrade = (trade: createTradeDto) => dispatch(createTradeThunk(trade));
+  const updateTrade = (id: number, trade: Partial<createTradeDto>) =>
+    dispatch(updateTradeThunk({ id, body: trade }));
+  const deleteTrade = (id: number) => dispatch(deleteTradeThunk(id));
 
   return {
     trades,
-    addNewTrade,
-    removeTradeById,
-    initializeTrades,
+    filteredTrades,
+    loading,
+    error,
+    fetchAllTrades,
+    createTrade,
+    updateTrade,
+    deleteTrade,
   };
 };
+
