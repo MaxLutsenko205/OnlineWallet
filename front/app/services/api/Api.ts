@@ -8,10 +8,10 @@ const BASE_URL = "/api";
 
 // Основная универсальная fetch-функция с поддержкой FormData и кастомных заголовков
 export async function apiFetch<T, TBody = unknown>(
-  path: string,
-  method: string = "GET",
-  body?: TBody,
-  customHeaders?: HeadersInit
+    path: string,
+    method: string = "GET",
+    body?: TBody,
+    customHeaders?: HeadersInit
 ): Promise<ApiResponse<T>> {
   try {
     const url = `${BASE_URL}/${path}`;
@@ -19,13 +19,17 @@ export async function apiFetch<T, TBody = unknown>(
 
     const isFormData = body instanceof FormData;
 
+    // Не добавлять Authorization для этих маршрутов
+    const authFreeRoutes = ["/auth/login", "/auth/register"];
+    const shouldAddAuth = token && !authFreeRoutes.includes(`/${path}`);
+
     const defaultHeaders: HeadersInit = isFormData
-      ? token
-        ? { Authorization: `Bearer ${token}` }
-        : {}
-      : {
+        ? shouldAddAuth
+            ? { Authorization: `Bearer ${token}` }
+            : {}
+        : {
           "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(shouldAddAuth ? { Authorization: `Bearer ${token}` } : {}),
         };
 
     const headers: HeadersInit = {
@@ -37,10 +41,10 @@ export async function apiFetch<T, TBody = unknown>(
       method,
       headers,
       body: body
-        ? isFormData
-          ? (body as BodyInit) // don't stringify FormData
-          : JSON.stringify(body)
-        : undefined,
+          ? isFormData
+              ? (body as BodyInit)
+              : JSON.stringify(body)
+          : undefined,
     };
 
     console.log("url", url);
@@ -66,6 +70,7 @@ export async function apiFetch<T, TBody = unknown>(
   }
 }
 
+
 // Обёртка с методами для CRUD операций
 export const api = {
   getAll: <T>(route: string = "", params?: string) =>
@@ -77,7 +82,7 @@ export const api = {
   create: <TInput, TOutput = TInput>(
     route: string,
     data: TInput,
-    headers?: HeadersInit
+      headers?: HeadersInit
   ) => apiFetch<TOutput>(route, "POST", data, headers),
 
   update: <TInput, TOutput = TInput>(

@@ -13,7 +13,8 @@ export async function login(
    console.log("Login function called with body:", body);
   const response = await api.create<AuthDto, { token: string }>(
     ROUTE + "/login",
-    body
+    body,
+      {}
   );
   console.log("Login response:", response);
   return response;

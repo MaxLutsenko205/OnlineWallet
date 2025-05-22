@@ -100,7 +100,6 @@ public ResponseEntity<Category> updateCategory(@PathVariable Long id,
     return ResponseEntity.ok(updated);
 }
 
-
     @Operation(summary = "Удалить пользовательскую категорию по ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Категория удалена"),
